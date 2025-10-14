@@ -10,4 +10,21 @@ services:
       # This allows for live reloading when code changes
       - .:/app
     # Override the Dockerfile CMD for development to enable reload
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload 
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017
+      - MONGODB_DB_NAME=landscape_supply
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=landscape_supply
+
+volumes:
+  mongodb_data: 
