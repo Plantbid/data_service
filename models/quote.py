@@ -10,6 +10,18 @@ from typing import List, Optional
 from pydantic import BaseModel, ConfigDict, Field
 
 
+class QuoteLineItemCreate(BaseModel):
+    """
+    Schema for creating a quote line item.
+
+    Only requires product_id and quantity. The API will look up the product
+    and denormalize the product data (name, price, unit) into the quote.
+    """
+
+    product_id: str = Field(..., description="Reference to the product ID")
+    quantity: float = Field(..., description="Quantity requested", gt=0)
+
+
 class QuoteLineItem(BaseModel):
     """
     A single line item in a quote with denormalized product data.
@@ -41,7 +53,7 @@ class QuoteBase(BaseModel):
 class QuoteCreate(QuoteBase):
     """Schema for creating a new quote."""
 
-    line_items: List[QuoteLineItem] = Field(
+    line_items: List[QuoteLineItemCreate] = Field(
         ..., description="Line items in the quote", min_length=1
     )
 

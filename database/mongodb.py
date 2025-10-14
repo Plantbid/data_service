@@ -3,10 +3,11 @@ MongoDB connection setup for the landscape supply platform.
 
 This module provides async MongoDB connection management using Motor.
 """
-import os
 from typing import Optional
 
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
+
+from settings import settings
 
 
 class MongoDB:
@@ -24,8 +25,11 @@ async def connect_to_mongodb() -> None:
     Establish connection to MongoDB.
     Called on application startup.
     """
-    mongodb_url = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
-    db_name = os.getenv("MONGODB_DB_NAME", "landscape_supply")
+    mongodb_url = settings.MONGODB_URL
+    db_name = settings.MONGODB_DB_NAME
+
+    if not mongodb_url or not db_name:
+        raise ValueError("MONGODB_URL and MONGODB_DB_NAME must be configured in settings")
 
     print(f"Connecting to MongoDB at {mongodb_url}, database: {db_name}")
 

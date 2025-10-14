@@ -32,6 +32,10 @@ class BaseSettings(PydanticBaseSettings):
     DATABASE_URL: str | None = None
     SECRET_KEY: str | None = None
 
+    # MongoDB settings
+    MONGODB_URL: str | None = None
+    MONGODB_DB_NAME: str | None = None
+
     # CORS settings - can still be overridden
     CORS_ORIGINS: list[str] = ["*"]
 
@@ -57,6 +61,9 @@ class DevelopmentSettings(BaseSettings):
     # Provide defaults for development if env vars aren't set
     DATABASE_URL: str = "postgresql+psycopg2://user:password@localhost:5432/app_dev"
     SECRET_KEY: str = "a-very-insecure-development-secret-key"  # Change this!
+    # MongoDB defaults for local development
+    MONGODB_URL: str = "mongodb://localhost:27017"
+    MONGODB_DB_NAME: str = "landscape_supply"
     # e.g., CORS_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
 
@@ -69,6 +76,8 @@ class StagingSettings(BaseSettings):
     # No defaults - these must be provided in the staging environment
     DATABASE_URL: str
     SECRET_KEY: str
+    MONGODB_URL: str
+    MONGODB_DB_NAME: str
 
 
 class ProductionSettings(BaseSettings):
@@ -81,6 +90,8 @@ class ProductionSettings(BaseSettings):
     # No defaults - these must be provided in the production environment
     DATABASE_URL: str
     SECRET_KEY: str
+    MONGODB_URL: str
+    MONGODB_DB_NAME: str
     CORS_ORIGINS: list[str] = ["https://your-production-domain.com"]
 
 
@@ -93,6 +104,9 @@ class TestingSettings(BaseSettings):
     # Provide defaults for testing
     DATABASE_URL: str = "postgresql+psycopg2://user:password@localhost:5432/app_test"
     SECRET_KEY: str = "a-very-insecure-testing-secret-key"
+    # MongoDB defaults for testing (runs in Docker with service name 'mongodb')
+    MONGODB_URL: str = "mongodb://mongodb:27017"
+    MONGODB_DB_NAME: str = "landscape_supply_test"
 
 
 @lru_cache()  # Cache the settings object for performance
@@ -124,6 +138,8 @@ settings = get_settings()
 print(f"App Name: {settings.APP_NAME}")
 print(f"Environment: {settings.ENVIRONMENT}")
 print(f"Database URL: {settings.DATABASE_URL}")
+print(f"MongoDB URL: {settings.MONGODB_URL}")
+print(f"MongoDB DB Name: {settings.MONGODB_DB_NAME}")
 print(f"Secret Key: {settings.SECRET_KEY}")
 print(f"CORS Origins: {settings.CORS_ORIGINS}")
 print(f"Testing: {settings.TESTING}")

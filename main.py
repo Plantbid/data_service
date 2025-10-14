@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from database.mongodb import connect_to_mongodb, close_mongodb_connection
-from routes import health
+from routes import health, products, quotes
 
 
 @asynccontextmanager
@@ -21,3 +21,5 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 app.include_router(health.router)
+app.include_router(products.router)
+app.include_router(quotes.router)
