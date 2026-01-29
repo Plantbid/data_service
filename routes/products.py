@@ -4,7 +4,7 @@ Product routes for the landscape supply platform.
 These endpoints manage product CRUD operations.
 The PATCH endpoint includes a TODO for implementing propagation to quotes.
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List
 
 from bson import ObjectId
@@ -32,8 +32,8 @@ async def create_product(product_data: ProductCreate) -> Product:
 
     # Convert to dict and add timestamps
     product_dict = product_data.model_dump()
-    product_dict["created_at"] = datetime.utcnow()
-    product_dict["updated_at"] = datetime.utcnow()
+    product_dict["created_at"] = datetime.now(timezone.utc)
+    product_dict["updated_at"] = datetime.now(timezone.utc)
 
     # Insert into database
     result = await products_collection.insert_one(product_dict)
@@ -150,7 +150,7 @@ async def update_product(product_id: str, product_update: ProductUpdate) -> Prod
         )
 
     # Always update the updated_at timestamp
-    update_data["updated_at"] = datetime.utcnow()
+    update_data["updated_at"] = datetime.now(timezone.utc)
 
     # Update the product
     await products_collection.update_one(
@@ -175,6 +175,7 @@ async def update_product(product_id: str, product_update: ProductUpdate) -> Prod
     # - How to update denormalized fields (product_name, product_price, product_unit)?
     # - How to recalculate line_total and total_amount?
     # - How to ensure reliability and consistency?
+    # - Scalability: there could be a million quotes related to this product.
 
     updated_product["_id"] = str(updated_product["_id"])
     return Product(**updated_product)

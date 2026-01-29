@@ -3,7 +3,7 @@ Product data models for the landscape supply platform.
 
 Products represent materials that can be purchased (e.g., mulch, stone, soil).
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -12,12 +12,15 @@ from pydantic import BaseModel, ConfigDict, Field
 class ProductBase(BaseModel):
     """Base product fields."""
 
-    name: str = Field(..., description="Product name", min_length=1, max_length=200)
+    name: str = Field(..., description="Product name",
+                      min_length=1, max_length=200)
     description: Optional[str] = Field(None, description="Product description")
     price: float = Field(..., description="Price per unit", gt=0)
-    unit: str = Field(..., description="Unit of measurement (e.g., 'yard', 'ton', 'bag')")
+    unit: str = Field(...,
+                      description="Unit of measurement (e.g., 'yard', 'ton', 'bag')")
     supplier_name: str = Field(..., description="Name of the supplier")
-    category: str = Field(..., description="Product category (e.g., 'Mulch', 'Stone', 'Soil')")
+    category: str = Field(...,
+                          description="Product category (e.g., 'Mulch', 'Stone', 'Soil')")
     sku: str = Field(..., description="Stock keeping unit / product code")
 
 
@@ -47,8 +50,10 @@ class Product(ProductBase):
     """
 
     id: str = Field(..., alias="_id", description="MongoDB document ID")
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc))
 
     model_config = ConfigDict(
         populate_by_name=True,

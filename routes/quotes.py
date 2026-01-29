@@ -4,7 +4,7 @@ Quote routes for the landscape supply platform.
 These endpoints manage quote CRUD operations.
 The POST endpoint demonstrates denormalization by embedding product data.
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List
 
 from bson import ObjectId
@@ -79,8 +79,8 @@ async def create_quote(quote_data: QuoteCreate) -> Quote:
     quote_dict = quote_data.model_dump(exclude={"line_items"})
     quote_dict["line_items"] = denormalized_line_items
     quote_dict["total_amount"] = total_amount
-    quote_dict["created_at"] = datetime.utcnow()
-    quote_dict["updated_at"] = datetime.utcnow()
+    quote_dict["created_at"] = datetime.now(timezone.utc)
+    quote_dict["updated_at"] = datetime.now(timezone.utc)
 
     # Insert into database
     result = await quotes_collection.insert_one(quote_dict)

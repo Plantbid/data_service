@@ -2,7 +2,7 @@
 Tests for Product Pydantic models.
 """
 import pytest
-from datetime import datetime
+from datetime import datetime, timezone
 from pydantic import ValidationError
 
 from models.product import ProductBase, ProductCreate, ProductUpdate, Product
@@ -77,8 +77,8 @@ def test_product_model_with_id_and_timestamps():
         "supplier_name": "Test Supplier",
         "category": "Mulch",
         "sku": "TEST-001",
-        "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow()
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc)
     }
     product = Product(**product_data)
     assert product.id == "507f1f77bcf86cd799439011"
@@ -97,8 +97,8 @@ def test_product_model_accepts_id_alias():
         "supplier_name": "Test Supplier",
         "category": "Mulch",
         "sku": "TEST-001",
-        "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow()
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc)
     }
     product = Product(**product_data)
     assert product.id == "507f1f77bcf86cd799439011"

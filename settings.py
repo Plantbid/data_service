@@ -116,7 +116,6 @@ def get_settings() -> BaseSettings:
     Uses lru_cache to only instantiate the settings once.
     """
     env = ENVIRONMENT.lower()
-    print(f"Loading settings for environment: {env}")
     if env == AppSettings.DEVELOPMENT.value:
         return DevelopmentSettings()
     elif env == AppSettings.STAGING.value:
@@ -126,22 +125,8 @@ def get_settings() -> BaseSettings:
     elif env == AppSettings.TESTING.value:
         return TestingSettings()
     else:
-        print(
-            f"Warning: Unknown environment '{env}'. Falling back to BaseSettings.")
         # Fallback or raise an error depending on desired behavior
         return BaseSettings()
 
 
 settings = get_settings()
-
-# Example usage of the settings
-print(f"App Name: {settings.APP_NAME}")
-print(f"Environment: {settings.ENVIRONMENT}")
-print(f"Database URL: {settings.DATABASE_URL}")
-print(f"MongoDB URL: {settings.MONGODB_URL}")
-print(f"MongoDB DB Name: {settings.MONGODB_DB_NAME}")
-print(f"Secret Key: {settings.SECRET_KEY}")
-print(f"CORS Origins: {settings.CORS_ORIGINS}")
-print(f"Testing: {settings.TESTING}")
-# Accessing the example setting
-print(f"Example API Key: {settings.EXAMPLE_API_KEY}")

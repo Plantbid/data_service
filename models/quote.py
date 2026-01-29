@@ -4,7 +4,7 @@ Quote data models for the landscape supply platform.
 Quotes represent customer requests for materials with embedded (denormalized) product data.
 This denormalization allows for fast reads without joins, but requires propagation when products change.
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -32,10 +32,12 @@ class QuoteLineItem(BaseModel):
 
     product_id: str = Field(..., description="Reference to the product ID")
     product_name: str = Field(..., description="Product name (denormalized)")
-    product_price: float = Field(..., description="Product price at quote time (denormalized)")
+    product_price: float = Field(...,
+                                 description="Product price at quote time (denormalized)")
     product_unit: str = Field(..., description="Product unit (denormalized)")
     quantity: float = Field(..., description="Quantity requested", gt=0)
-    line_total: float = Field(..., description="Total for this line (quantity * price)")
+    line_total: float = Field(...,
+                              description="Total for this line (quantity * price)")
 
 
 class QuoteBase(BaseModel):
@@ -43,7 +45,8 @@ class QuoteBase(BaseModel):
 
     customer_name: str = Field(..., description="Customer name", min_length=1)
     customer_email: str = Field(..., description="Customer email")
-    project_name: Optional[str] = Field(None, description="Optional project name")
+    project_name: Optional[str] = Field(
+        None, description="Optional project name")
     status: str = Field(
         default="draft",
         description="Quote status (draft, sent, accepted, rejected)",
@@ -66,10 +69,13 @@ class Quote(QuoteBase):
     """
 
     id: str = Field(..., alias="_id", description="MongoDB document ID")
-    line_items: List[QuoteLineItem] = Field(..., description="Line items in the quote")
+    line_items: List[QuoteLineItem] = Field(...,
+                                            description="Line items in the quote")
     total_amount: float = Field(..., description="Total quote amount")
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc))
 
     model_config = ConfigDict(
         populate_by_name=True,

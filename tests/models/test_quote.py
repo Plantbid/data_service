@@ -2,10 +2,10 @@
 Tests for Quote Pydantic models.
 """
 import pytest
-from datetime import datetime
+from datetime import datetime, timezone
 from pydantic import ValidationError
 
-from models.quote import QuoteLineItem, QuoteBase, QuoteCreate, Quote
+from models.quote import QuoteLineItem, QuoteLineItemCreate, QuoteBase, QuoteCreate, Quote
 
 
 def test_quote_line_item_valid():
@@ -40,13 +40,9 @@ def test_quote_line_item_requires_positive_quantity():
 
 def test_quote_create_valid():
     """Test that QuoteCreate accepts valid data."""
-    line_item = QuoteLineItem(
+    line_item = QuoteLineItemCreate(
         product_id="507f1f77bcf86cd799439011",
-        product_name="Premium Mulch",
-        product_price=35.50,
-        product_unit="yard",
-        quantity=10.0,
-        line_total=355.00
+        quantity=10.0
     )
     quote_data = {
         "customer_name": "Test Customer",
@@ -75,13 +71,9 @@ def test_quote_create_requires_at_least_one_line_item():
 
 def test_quote_create_defaults_to_draft_status():
     """Test that QuoteCreate defaults status to 'draft'."""
-    line_item = QuoteLineItem(
+    line_item = QuoteLineItemCreate(
         product_id="507f1f77bcf86cd799439011",
-        product_name="Premium Mulch",
-        product_price=35.50,
-        product_unit="yard",
-        quantity=10.0,
-        line_total=355.00
+        quantity=10.0
     )
     quote_data = {
         "customer_name": "Test Customer",
@@ -111,8 +103,8 @@ def test_quote_model_with_id_and_timestamps():
         "status": "draft",
         "line_items": [line_item],
         "total_amount": 355.00,
-        "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow()
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc)
     }
     quote = Quote(**quote_data)
     assert quote.id == "507f1f77bcf86cd799439012"

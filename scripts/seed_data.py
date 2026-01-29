@@ -4,15 +4,15 @@ Seed script to populate initial product data for testing.
 Usage:
     python scripts/seed_data.py
 """
+from motor.motor_asyncio import AsyncIOMotorClient
 import asyncio
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Add parent directory to path to import from project
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from motor.motor_asyncio import AsyncIOMotorClient
+sys.path.insert(0, os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..')))
 
 
 SAMPLE_PRODUCTS = [
@@ -24,8 +24,8 @@ SAMPLE_PRODUCTS = [
         "supplier_name": "Green Valley Supplies",
         "category": "Mulch",
         "sku": "MUL-HW-001",
-        "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc),
     },
     {
         "name": "Red Cedar Mulch",
@@ -35,8 +35,8 @@ SAMPLE_PRODUCTS = [
         "supplier_name": "Green Valley Supplies",
         "category": "Mulch",
         "sku": "MUL-RC-002",
-        "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc),
     },
     {
         "name": "River Rock 1-3 inch",
@@ -46,8 +46,8 @@ SAMPLE_PRODUCTS = [
         "supplier_name": "Mountain Stone Co",
         "category": "Stone",
         "sku": "STN-RR-001",
-        "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc),
     },
     {
         "name": "Pea Gravel",
@@ -57,8 +57,8 @@ SAMPLE_PRODUCTS = [
         "supplier_name": "Mountain Stone Co",
         "category": "Stone",
         "sku": "STN-PG-002",
-        "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc),
     },
     {
         "name": "Premium Topsoil",
@@ -68,8 +68,8 @@ SAMPLE_PRODUCTS = [
         "supplier_name": "Earth Materials Inc",
         "category": "Soil",
         "sku": "SOL-TS-001",
-        "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc),
     },
     {
         "name": "Compost Blend",
@@ -79,8 +79,8 @@ SAMPLE_PRODUCTS = [
         "supplier_name": "Earth Materials Inc",
         "category": "Soil",
         "sku": "SOL-CB-002",
-        "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc),
     },
     {
         "name": "Playground Mulch",
@@ -90,8 +90,8 @@ SAMPLE_PRODUCTS = [
         "supplier_name": "SafePlay Materials",
         "category": "Mulch",
         "sku": "MUL-PG-003",
-        "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc),
     },
     {
         "name": "Crushed Granite",
@@ -101,8 +101,8 @@ SAMPLE_PRODUCTS = [
         "supplier_name": "Mountain Stone Co",
         "category": "Stone",
         "sku": "STN-CG-003",
-        "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc),
     },
     {
         "name": "Garden Soil Mix",
@@ -112,8 +112,8 @@ SAMPLE_PRODUCTS = [
         "supplier_name": "Earth Materials Inc",
         "category": "Soil",
         "sku": "SOL-GM-003",
-        "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc),
     },
     {
         "name": "Black Dyed Mulch",
@@ -123,8 +123,8 @@ SAMPLE_PRODUCTS = [
         "supplier_name": "Green Valley Supplies",
         "category": "Mulch",
         "sku": "MUL-BK-004",
-        "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow(),
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc),
     },
 ]
 
@@ -155,7 +155,8 @@ async def seed_database():
         # Display inserted products
         print("\nInserted products:")
         async for product in products_collection.find():
-            print(f"  - {product['name']} (${product['price']}/{product['unit']}) - SKU: {product['sku']}")
+            print(
+                f"  - {product['name']} (${product['price']}/{product['unit']}) - SKU: {product['sku']}")
 
         print("\n✅ Database seeded successfully!")
 
