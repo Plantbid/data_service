@@ -2,8 +2,6 @@
 
 This is the seed project for the Senior Data Engineer coding interview.
 
-**For interview instructions and requirements, see [INTERVIEW_CHALLENGE.md](INTERVIEW_CHALLENGE.md)**
-
 ## Quick Start
 
 ### 1. Start the Services
